@@ -13,6 +13,7 @@ exports.register = function(server, options, next) {
       return next(err);
     }
     server.log(['info', 'hapi-postgres-connection'], 'Postgres Connection Active');
+    
     server.expose('client', client);
     server.expose('done', done);
 

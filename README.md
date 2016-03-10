@@ -42,6 +42,16 @@ please see: https://github.com/dwyl/learn-environment-variables
 
 ## *Implementation Detail*
 
+To run the tests *locally* you will need to have
+a running instance of PostgreSQL with a database called `test` available.
+
+Then set your `POSTGRES_URL` Environment Variable, on my localhost its:
+```sh
+export DATABASE_URL=postgres://postgres:@localhost/test
+```
+(*the default `postgres` user does not have a password on localhost*)
+
+
 <br />
 
 ## *Motivation?*
