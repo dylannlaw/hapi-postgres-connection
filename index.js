@@ -1,13 +1,13 @@
 var pg = require('pg');
 var assert = require('assert');
 var internals = {};
-
+var pkg = require('./package.json');
 exports.register = function(server, options, next) {
   // if POSTGRES_URL Environment Variable is unset halt the server.start
   assert(process.env.POSTGRES_URL, 'Please set POSTGRES_URL Environment Variable');
 
   pg.connect(process.env.POSTGRES_URL, function(err, client, done) {
-    
+
     if (err) {
       server.log(['error', 'hapi-postgres-connection'], 'Postgres Connection Failed');
       return next(err);
@@ -26,5 +26,5 @@ exports.register = function(server, options, next) {
 };
 
 exports.register.attributes = {
-  pkg: require('./package.json')
+  pkg: pkg
 };
