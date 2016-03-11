@@ -1,5 +1,7 @@
 # hapi-postgres-connection
 
+![hapi-postgres-connection](https://cloud.githubusercontent.com/assets/194400/13723469/73b5d8f2-e85e-11e5-82dc-943e7ebccdce.png)
+
 Creates a PostgreSQL Connection (Pool) available anywhere in your Hapi application.
 
 ## *Why*?
@@ -22,7 +24,7 @@ the *most popular* (*actively maintained*) node PostgreSQL Client.
 ### *Download/Install* from NPM
 
 ```sh
-npm install hapi-postgres-connection --save
+npm install hapi-postgres-connection --savex§
 ```
 
 ### *Intialise* the plugin in your Hapi Server
@@ -47,7 +49,7 @@ a running instance of PostgreSQL with a database called `test` available.
 
 Then set your `POSTGRES_URL` Environment Variable, on my localhost its:
 ```sh
-export DATABASE_URL=postgres://postgres:@localhost/test
+export POSTGRES_URL=postgres://postgres:@localhost/test
 ```
 (*the default `postgres` user does not have a password on localhost*)
 
