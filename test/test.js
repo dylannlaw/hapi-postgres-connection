@@ -23,22 +23,18 @@ test("server.register plugin fails when POSTGRES_URL undefined", function (t) {
 
 });
 
-// test("Test connecting to an invalid POSTGRES_URL", function (t) {
-//   // temporarily set process.env.POSTGRES_URL to an Invalid url:
-//   process.env.POSTGRES_URL = 'postgres://postgres:wrongPASSWORD@localhost/nodb';
-//   console.log(process.env.POSTGRES_URL);
-//   var server1 = new Hapi.Server();
-//   server1.connection();
-//    // attempt to boot the server with an invalid POSTGRES_URL
-//   server1.register({ register: require('../index.js') }, function(err) {
-//     // console.log(' - - - - - - - - - -> server1 plugin err:');
-//     // console.log(err);
-//     t.equal(err.message, 'database "nodb" does not exist',
-//       'Cannot Connect to non-existent DB');
-//     require('decache')('../index.js'); // decache so we can require again
-//     t.end();
-//   });
-// });
+test("Test connecting to an invalid POSTGRES_URL", function (t) {
+  // temporarily set process.env.POSTGRES_URL to an Invalid url:
+  process.env.POSTGRES_URL = 'postgres://postgres:wrongPASSWORD@localhost/nodb';
+  console.log(process.env.POSTGRES_URL);
+  var pg = require('../index.js');
+  pg.connect({},function(err){
+    console.log(err);
+    t.equal(err.message, 'database "nodb" does not exist',
+      'Cannot Connect to non-existent DB');
+    t.end();
+  }); // connection will fail because of POSTGRES_URL
+});
 
 test("Connect to Valid POSTGRES_URL", function (t) {
   // temporarily set process.env.POSTGRES_URL to an Invalid url:
