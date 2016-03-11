@@ -8,7 +8,8 @@
     "test": "istanbul cover ./node_modules/tape/bin/tape ./test/*.js  | node_modules/tap-spec/bin/cmd.js"
   },
   "dependencies": {
-    "pg": "^4.5.1"
+    "pg": "^4.5.1",
+    "terminate": "^1.0.8"
   },
   "devDependencies": {
     "decache": "^3.0.5",

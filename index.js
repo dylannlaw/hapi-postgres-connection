@@ -3,11 +3,10 @@ var assert = require('assert');
 var internals = {};
 var pkg = require('./package.json');
 
-var CLIENT, DONE; // Don't worry these "Globals" are scoped by module
+var CLIENT, DONE, CON = 0; // Don't worry these "Globals" are scoped by module
 
 function connect (server, callback) {
-  console.log('CLIENT:',CLIENT);
-  if (CLIENT) {
+  if (CLIENT || DONE) {
     return callback();
   }
   pg.connect(process.env.POSTGRES_URL, function(err, client, done) {
@@ -18,8 +17,8 @@ function connect (server, callback) {
       return callback(err);
     }
     server.log(['info', 'hapi-postgres-connection'], 'Postgres Connection Active');
-    console.log(' - - - - - -- - - - - - - - - - - - - - - - - - - - - - - - - - - - ')
-    console.log('CONNECTED TO POSTGRES_URL: ', process.env.POSTGRES_URL);
+    // console.log(' - - - - - -- - - - - - - - - - - - - - - - - - - - - - - - - - - - ')
+    console.log('CONNECTED TO POSTGRES_URL: ', process.env.POSTGRES_URL, ++CON);
     // server.expose('client', client);
     // server.expose('done', done);
     CLIENT = client;
@@ -31,13 +30,9 @@ function connect (server, callback) {
 exports.register = function(server, options, next) {
   // if POSTGRES_URL Environment Variable is unset halt the server.start
   assert(process.env.POSTGRES_URL, 'Please set POSTGRES_URL Environment Variable');
-  console.log(' - - - - - -- - - - - - - - - - - - - - - - - - - - - - - - - - - - ')
-  // console.log(next.toString());
-  // console.log(' - - - - - -- - - - - - - - - - - - - - - - - - - - - - - - - - - - ')
 
-  server.ext('onPreHandler', function(request, reply) {
-    console.log(request.path)
-    console.log(' > > > > > > > > > > > > onPreHandler < < < < < < < < < < < < ');
+  server.ext('onRequest', function(request, reply) {
+    console.log(' > > > > > > > > > > > > onRequest < < < < < < < < < < < < ');
     connect(server, function () {
       request.pg = {
         client: CLIENT,
@@ -47,21 +42,25 @@ exports.register = function(server, options, next) {
     });
   });
 
-  server.on('stop', function(request, err) {
+  server.on('tail', function(request, err) {
     console.log('Stopping the server takes a while for some reason...');
-    console.log(CLIENT);
+    console.log(CLIENT.readyForQuery);
     console.log(DONE);
-    if(CLIENT) {
+    // if(CLIENT) {
       CLIENT.end();
       DONE();
-    }
+    // console.log(process);
+    console.log('WHY?!');
+      // server.plugins['hapi-postgres-connection'].client.end()
+      // server.plugins['hapi-postgres-connection'].done();
     server.log(['info', 'hapi-postgres-connection'], 'Postgres Connection Closed');
+    // process.exit;
     return;
   });
 
-  connect(server, function (err) {
-    next(err);
-  });
+  // connect(server, function (err) {
+  next();
+  // });
 };
 
 exports.register.attributes = {
