@@ -1,26 +1,23 @@
 var test = require('tape'); // testing done simple ;-)
 var Hapi = require('hapi');
 var VALID_POSTGRES_URL =  process.env.POSTGRES_URL;
-
+require('./_create_test_db.js');
 /************************* TESTS ***************************/
 
 test("server.register plugin fails when POSTGRES_URL undefined", function (t) {
   // temporarily set process.env.POSTGRES_URL to an Invalid url:
   delete process.env.POSTGRES_URL;
-  console.log(process.env.POSTGRES_URL);
   var server1 = new Hapi.Server();
   server1.connection();
-   // attempt to boot the server with an invalid POSTGRES_URL
-  try {
+  try {  // attempt to boot the server with an invalid POSTGRES_URL
     server1.register({ register: require('../index.js') }, function(err) {
       console.log(err); // this error is never reached as the assert is fatal!
     });
   } catch (e) {
     t.ok(e.toString().indexOf('Please set POSTGRES_URL') > 1,
-      'Please set POSTGRES_URL Environment Variable');
+      'Please set POSTGRES_URL Env Variable');
     t.end();
   }
-
 });
 
 test("Test connecting to an invalid POSTGRES_URL", function (t) {
@@ -33,6 +30,8 @@ test("Test connecting to an invalid POSTGRES_URL", function (t) {
     t.end();
   }); // connection will fail because of invalid POSTGRES_URL
 });
+
+
 
 test("Connect to Valid POSTGRES_URL", function (t) {
   process.env.POSTGRES_URL = VALID_POSTGRES_URL; // restore valid POSTGRES_URL

@@ -22,11 +22,11 @@ exports.connect = connect;
 
 exports.register = function(server, options, next) {
   // if POSTGRES_URL Environment Variable is unset halt the server.start
-  assert(process.env.POSTGRES_URL, 'Please set POSTGRES_URL Environment Variable');
+  assert(process.env.POSTGRES_URL, 'Please set POSTGRES_URL Env Variable');
 
   server.ext('onRequest', function (request, reply) {
     connect(function (err) {
-      server.log(['info', 'hapi-postgres-connection'], 'Postgres Connection Active');
+      server.log(['info', 'hapi-postgres-connection'], 'DB Connection Active');
       request.pg = {
         client: CLIENT,
         done: DONE
@@ -38,7 +38,7 @@ exports.register = function(server, options, next) {
   server.on('tail', function(request, err) {
     CLIENT.end();
     DONE();
-    server.log(['info', 'hapi-postgres-connection'], 'Postgres Connection Closed');
+    server.log(['info', 'hapi-postgres-connection'], 'DB Connection Closed');
   });
 
   next();
