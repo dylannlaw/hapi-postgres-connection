@@ -26,35 +26,29 @@ test("server.register plugin fails when POSTGRES_URL undefined", function (t) {
 test("Test connecting to an invalid POSTGRES_URL", function (t) {
   // temporarily set process.env.POSTGRES_URL to an Invalid url:
   process.env.POSTGRES_URL = 'postgres://postgres:wrongPASSWORD@localhost/nodb';
-  console.log(process.env.POSTGRES_URL);
   var pg = require('../index.js');
-  pg.connect({},function(err){
-    console.log(err);
+  pg.connect(function connect_callback (err) {
     t.equal(err.message, 'database "nodb" does not exist',
       'Cannot Connect to non-existent DB');
     t.end();
-  }); // connection will fail because of POSTGRES_URL
+  }); // connection will fail because of invalid POSTGRES_URL
 });
 
 test("Connect to Valid POSTGRES_URL", function (t) {
-  // temporarily set process.env.POSTGRES_URL to an Invalid url:
-  process.env.POSTGRES_URL = VALID_POSTGRES_URL;
+  process.env.POSTGRES_URL = VALID_POSTGRES_URL; // restore valid POSTGRES_URL
   var server = new Hapi.Server({ debug: { request: ['error'] } });
   server.connection();
-   // attempt to boot the server with an invalid POSTGRES_URL
   server.register({ register: require('../index.js') }, function(err) {
     t.ok(!err, 'No error connecting to postgres');
-
   });
 
   server.route({
     method: 'GET',
     path: '/',
     handler: function(request, reply) {
-      console.log(' - - - - - - - - - - - - - - - - - - - - - - - - - - - >>>');
-      console.log('request.pg', request.pg.client);
-      request.pg.done();
-      console.log('<<< - - - - - - - - - - - - - - - - - - - - - - - - - - -');
+      // console.log(' - - - - - - - - - - - - - - - - - - - - - - - - - - - >>>');
+      // console.log('request.pg', request.pg.client.query);
+      // console.log('<<< - - - - - - - - - - - - - - - - - - - - - - - - - - -');
       return reply('hello');
     }
   });
@@ -64,10 +58,4 @@ test("Connect to Valid POSTGRES_URL", function (t) {
     console.log(response.result);
     server.stop(function(){  t.end() });
   });
-  // server.start(function () {
-  //   server.stop(function () {
-  //     // done();
-  //     t.end();
-  //   });
-  // });
 });
