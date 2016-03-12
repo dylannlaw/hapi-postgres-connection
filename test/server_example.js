@@ -4,9 +4,20 @@ var assert = require('assert');
 
 var server = new Hapi.Server({ debug: { request: ['error'] } });
 
+var hapiPgOpts = {
+  connectionString: process.env.POSTGRES_URL
+};
+
 server.connection();
-server.register({ register: require('../index.js') }, function(err) {
-  assert(!err, 'No error connecting to postgres');
+
+server.register({
+  register: require('hapi-pg'),
+  options: hapiPgOpts
+}, function (err) {
+  if (err) {
+    console.error(err);
+    throw err;
+  }
 });
 
 server.route({
@@ -15,9 +26,9 @@ server.route({
   handler: function(request, reply) {
     var email = 'test@test.net';
     var select = escape('SELECT * FROM people WHERE (email = %L)', email);
-    request.pg.client.query(select, function(err, result) {
+    request.postgres.client.query(select, function(err, result) {
       // console.log(err, result);
-      request.pg.done();
+      request.postgres.done();
       return reply(result.rows[0]);
     })
   }
@@ -30,12 +41,12 @@ server.route({
     var insert = escape('INSERT INTO logs (message) VALUES (%L)',
       request.payload.message);
     var select = 'SELECT * FROM logs WHERE (log_id = 2)';
-    request.pg.client.query(insert, function(err, result) {
-      console.log(err, result);
-      // request.pg.done();
-      request.pg.client.query(select, function(err, result) {
-        console.log(err, result);
-        // request.pg.done();
+    request.postgres.client.query(insert, function(err, result) {
+      // console.log(err, result);
+      // request.postgres.done();
+      request.postgres.client.query(select, function(err, result) {
+        // console.log(err, result);
+        // request.postgres.done();
         return reply(result.rows[0]);
       })
     })

@@ -34,7 +34,7 @@ test("Test connecting to an invalid POSTGRES_URL", function (t) {
 
 var server = require('./server_example.js');
 
-test("Connect to Valid POSTGRES_URL", function (t) {
+test.only("Connect to Valid POSTGRES_URL", function (t) {
   server.inject('/', function(response) {
     // t.equal(response.statusCode, 200, "Find Person in Database");
     t.equal(response.result.id, 1, "Person found in Postgres DB")
@@ -48,8 +48,7 @@ test("Connect to Valid POSTGRES_URL", function (t) {
   }
   server.inject(options, function(response) {
     // t.equal(response.statusCode, 200, "Find Person in Database");
-    t.equal(response.result.log_id, 1, "Log found in Postgres DB")
+    t.equal(response.result.log_id, 2, "Log found in Postgres DB")
     server.stop(function(){  t.end() });
   });
-
 });

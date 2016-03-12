@@ -14,6 +14,7 @@
   "devDependencies": {
     "decache": "^3.0.5",
     "hapi": "^13.1.0",
+    "hapi-pg": "^1.0.1",
     "istanbul": "^0.4.2",
     "jshint": "^2.9.1",
     "pg-escape": "^0.2.0",
