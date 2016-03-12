@@ -1,7 +1,7 @@
 var test = require('tape'); // testing done simple ;-)
 var Hapi = require('hapi');
 var VALID_POSTGRES_URL =  process.env.POSTGRES_URL;
-require('./_create_test_db.js');
+// require('./_create_test_db.js');
 /************************* TESTS ***************************/
 
 test("server.register plugin fails when POSTGRES_URL undefined", function (t) {
@@ -27,34 +27,29 @@ test("Test connecting to an invalid POSTGRES_URL", function (t) {
   pg.connect(function connect_callback (err) {
     t.equal(err.message, 'database "nodb" does not exist',
       'Cannot Connect to non-existent DB');
+      process.env.POSTGRES_URL = VALID_POSTGRES_URL; // restore valid POSTGRES_URL
     t.end();
   }); // connection will fail because of invalid POSTGRES_URL
 });
 
-
+var server = require('./server_example.js');
 
 test("Connect to Valid POSTGRES_URL", function (t) {
-  process.env.POSTGRES_URL = VALID_POSTGRES_URL; // restore valid POSTGRES_URL
-  var server = new Hapi.Server({ debug: { request: ['error'] } });
-  server.connection();
-  server.register({ register: require('../index.js') }, function(err) {
-    t.ok(!err, 'No error connecting to postgres');
-  });
-
-  server.route({
-    method: 'GET',
-    path: '/',
-    handler: function(request, reply) {
-      // console.log(' - - - - - - - - - - - - - - - - - - - - - - - - - - - >>>');
-      // console.log('request.pg', request.pg.client.query);
-      // console.log('<<< - - - - - - - - - - - - - - - - - - - - - - - - - - -');
-      return reply('hello');
-    }
-  });
-
   server.inject('/', function(response) {
-    t.equal(response.statusCode, 200, "Server is working.");
-    console.log(response.result);
+    // t.equal(response.statusCode, 200, "Find Person in Database");
+    t.equal(response.result.id, 1, "Person found in Postgres DB")
+    // server.stop(function(){  t.end() });
+  });
+
+  var options = {
+    method: 'POST',
+    url: '/insert',
+    payload: { message: 'Ground control to major Tom.'}
+  }
+  server.inject(options, function(response) {
+    // t.equal(response.statusCode, 200, "Find Person in Database");
+    t.equal(response.result.log_id, 1, "Log found in Postgres DB")
     server.stop(function(){  t.end() });
   });
+
 });
