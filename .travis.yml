@@ -10,6 +10,6 @@ after_success:
   - codecov --file coverage/lcov.info --disable search
 env:
   global:
-    - POSTGRES_URL=postgres://postgres:@localhost/test
+    - DATABASE_URL=postgres://postgres:@localhost/test
 addons:
   postgresql: "9.4"

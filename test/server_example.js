@@ -21,10 +21,9 @@ server.route({
   handler: function(request, reply) {
     var email = 'test@test.net';
     var select = escape('SELECT * FROM people WHERE (email = %L)', email);
-    console.log(request.postgres);
     request.postgres.client.query(select, function(err, result) {
-      // console.log(err, result);
       request.postgres.done();
+      // console.log(err, result);
       return reply(result.rows[0]);
     })
   }

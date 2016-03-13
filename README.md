@@ -34,7 +34,7 @@ npm install hapi-postgres-connection --savex§
 ### Required/Expected Environment Variable
 
 The plugin *expects* (*requires*) that you have an Environment Variable set
-for the Postgres Connection URL: `POSTGRES_URL` in the format:
+for the Postgres Connection URL: `DATABASE_URL` in the format:
 `postgres://username:password@localhost/database`
 
 > If you are unsure how to set the Environment Variable
@@ -47,9 +47,9 @@ please see: https://github.com/dwyl/learn-environment-variables
 To run the tests *locally* you will need to have
 a running instance of PostgreSQL with a database called `test` available.
 
-Then set your `POSTGRES_URL` Environment Variable, on my localhost its:
+Then set your `DATABASE_URL` Environment Variable, on my localhost its:
 ```sh
-export POSTGRES_URL=postgres://postgres:@localhost/test
+export DATABASE_URL=postgres://postgres:@localhost/test
 ```
 (*the default `postgres` user does not have a password on localhost*)
 
