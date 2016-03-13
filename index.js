@@ -2,8 +2,6 @@ var pg = require('pg');
 var assert = require('assert');
 var internals = {};
 var pkg = require('./package.json');
-var run_once = false;
-
 
 exports.register = function(server, options, next) {
   // if DATABASE_URL Environment Variable is unset halt the server.start
@@ -20,7 +18,6 @@ exports.register = function(server, options, next) {
         client: client,
         done: done
       }
-
       // each connection created is shut down when the server stops (e.g tests)
       if(!run_once) {
         run_once = true;
@@ -33,7 +30,6 @@ exports.register = function(server, options, next) {
         });
       }
       reply.continue();
-
     });
   });
 

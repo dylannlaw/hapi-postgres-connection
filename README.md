@@ -17,6 +17,8 @@ This Hapi Plugin creates a Connection (Pool) to PostgreSQL when your
 server boots and makes it available *anywhere* in your app's
 route handlers via `request.pg.client`.
 
+### One Dependency: `node-postgres`
+
 Uses https://github.com/brianc/node-postgres
 the *most popular* (*actively maintained*) node PostgreSQL Client.
 
