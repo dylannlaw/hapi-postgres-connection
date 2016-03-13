@@ -21,8 +21,8 @@ server.route({
   handler: function(request, reply) {
     var email = 'test@test.net';
     var select = escape('SELECT * FROM people WHERE (email = %L)', email);
-    request.postgres.client.query(select, function(err, result) {
-      request.postgres.done();
+    request.pg.client.query(select, function(err, result) {
+      request.pg.done();
       // console.log(err, result);
       return reply(result.rows[0]);
     })
@@ -36,9 +36,9 @@ server.route({
     var insert = escape('INSERT INTO logs (message) VALUES (%L)',
       request.payload.message);
     var select = 'SELECT * FROM logs WHERE (log_id = 2)';
-    request.postgres.client.query(insert, function(err, result) {
-      request.postgres.client.query(select, function(err, result) {
-        request.postgres.done();
+    request.pg.client.query(insert, function(err, result) {
+      request.pg.client.query(select, function(err, result) {
+        request.pg.done();
         return reply(result.rows[0]);
       })
     })

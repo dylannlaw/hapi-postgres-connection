@@ -16,7 +16,7 @@ exports.register = function(server, options, next) {
       assert(!err, pkg.name + 'ERROR Connecting')
       server.log(['info', pkg.name], 'DB Connection Active');
       CON.push({ client: client, done: done});
-      request.postgres = {
+      request.pg = {
         client: client,
         done: done
       }

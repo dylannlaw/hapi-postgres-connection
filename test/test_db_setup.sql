@@ -1,3 +1,4 @@
+/* These SQL statements setup the test database tables we need for our tests */
 /* first drop test tables from previous session so we have a clean database */
 DROP SCHEMA public cascade;
 CREATE SCHEMA public;
