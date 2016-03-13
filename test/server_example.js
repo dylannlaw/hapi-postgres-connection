@@ -4,15 +4,10 @@ var assert = require('assert');
 
 var server = new Hapi.Server({ debug: { request: ['error'] } });
 
-var hapiPgOpts = {
-  connectionString: process.env.POSTGRES_URL
-};
-
 server.connection();
 
 server.register({
-  register: require('hapi-pg'),
-  options: hapiPgOpts
+  register: require('../index.js')
 }, function (err) {
   if (err) {
     console.error(err);
@@ -26,6 +21,7 @@ server.route({
   handler: function(request, reply) {
     var email = 'test@test.net';
     var select = escape('SELECT * FROM people WHERE (email = %L)', email);
+    console.log(request.postgres);
     request.postgres.client.query(select, function(err, result) {
       // console.log(err, result);
       request.postgres.done();
@@ -42,11 +38,8 @@ server.route({
       request.payload.message);
     var select = 'SELECT * FROM logs WHERE (log_id = 2)';
     request.postgres.client.query(insert, function(err, result) {
-      // console.log(err, result);
-      // request.postgres.done();
       request.postgres.client.query(select, function(err, result) {
-        // console.log(err, result);
-        // request.postgres.done();
+        request.postgres.done();
         return reply(result.rows[0]);
       })
     })

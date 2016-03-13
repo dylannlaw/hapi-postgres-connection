@@ -1,54 +1,34 @@
-var pg = require('pg.js');
-var Hoek = require('hoek');
-
-var defaults = {
-    connectionString: undefined,
-    attach: 'onPreHandler',
-    detach: 'tail'
-};
-
+var pg = require('pg');
+var assert = require('assert');
+var internals = {};
+var pkg = require('./package.json');
+var run_once = false;
 exports.register = function(server, options, next) {
-  var config = Hoek.applyToDefaults(defaults, options);
+  // if POSTGRES_URL Environment Variable is unset halt the server.start
+  assert(process.env.POSTGRES_URL, 'Please set POSTGRES_URL Env Variable');
 
-  server.ext(config.attach, function(request, reply) {
-    var connectionString = generateConnection(options.connectionString, request);
-
-    // if a connection string is not resolved, we stop the process
-    if(!connectionString) {
-      return reply.continue();
-    }
-
-    pg.connect(connectionString, function(err, client, done) {
-      if ( err ) throw err;
-
+  server.ext('onPreHandler', function (request, reply) {
+    pg.connect(process.env.POSTGRES_URL, function(err, client, done) {
+      server.log(['info', pkg.name], 'DB Connection Active');
       request.postgres = {
         client: client,
         done: done
       }
+
+      server.on('stop', function() {
+        done();
+        client.end();
+        server.log(['info', pkg.name], 'DB Connection Closed');
+      });
+
       reply.continue();
+
     });
-
-  });
-
-  server.on('stop', function(request, err) {
-    console.log('STOP!!')
-    if ( request.postgres ) {
-      request.postgres.done();
-      request.postgres.client.end();
-    }
   });
 
   next();
-}
+};
 
 exports.register.attributes = {
-  pkg: require('./package.json')
-}
-
-function generateConnection(connectionString, request) {
-  if(typeof connectionString === 'function') {
-    return connectionString(request);
-  } else {
-    return connectionString;
-  }
-}
+  pkg: pkg
+};
