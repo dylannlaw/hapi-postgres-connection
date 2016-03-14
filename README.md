@@ -45,7 +45,7 @@ the *most popular* (*actively maintained*) node PostgreSQL Client.
 ### 1. *Download/Install* from NPM
 
 ```sh
-npm install hapi-postgres-connection --savex§
+npm install hapi-postgres-connection --save
 ```
 
 ### 2. *Intialise* the plugin in your Hapi Server
@@ -63,7 +63,7 @@ server.register({ // register all your plugins
 Now *all* your route handlers have access to Postgres
 via: `request.pg.client`
 
-### 3. Using Postgres Client in your Route Hander
+### 3. Using Postgres Client in your Route Handler
 
 ```js
 server.route({
@@ -114,4 +114,7 @@ export DATABASE_URL=postgres://postgres:@localhost/test
 
 ## *Motivation?*
 
-> see: https://github.com/dwyl/hapi-login-example-postgres/issues/6
+We were doing postgres connections the *hard* way in our app(s) ...
+We knew there had to be a *better* way
+After a few hours of [googling and code-reviewing](https://github.com/dwyl/hapi-login-example-postgres/issues/6)
+we decided to write our own little plugin to simplify things.
