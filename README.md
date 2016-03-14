@@ -1,8 +1,16 @@
-# hapi-postgres-connection
+# Hapi Postgres Connection
 
 ![hapi-postgres-connection](https://cloud.githubusercontent.com/assets/194400/13723469/73b5d8f2-e85e-11e5-82dc-943e7ebccdce.png)
 
 Creates a PostgreSQL Connection (Pool) available anywhere in your Hapi application.
+
+[![Build Status](https://travis-ci.org/dwyl/hapi-postgres-connection.svg?branch=master)](https://travis-ci.org/dwyl/hapi-postgres-connection)
+[![codecov.io](https://codecov.io/github/dwyl/hapi-postgres-connection/coverage.svg?branch=master)](https://codecov.io/github/dwyl/hapi-postgres-connection?branch=master)
+[![Code Climate](https://codeclimate.com/github/dwyl/hapi-postgres-connection/badges/gpa.svg)](https://codeclimate.com/github/dwyl/hapi-postgres-connection)
+[![devDependency Status](https://david-dm.org/dwyl/hapi-postgres-connection/dev-status.svg)](https://david-dm.org/dwyl/hapi-postgres-connection#info=devDependencies)
+[![Dependency Status](https://david-dm.org/dwyl/hapi-postgres-connection.svg)](https://david-dm.org/dwyl/hapi-postgres-connection)
+[![Join the chat at https://gitter.im/dwyl/chat](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/dwyl/chat?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 
 ## *Why*?
 
@@ -10,6 +18,8 @@ You are building a PostgreSQL-backed Hapi.js Application
 but don't want to be initialising a connection to Postgres
 in your route handler because it's *slow* and can lead
 to [*interesting* errors](https://github.com/brianc/node-postgres/issues/725) ...
+so instead, you spend 1 minute to include a *tiny, tried & tested* plugin
+that makes postgres available in all your route handlers.
 
 ## *What*?
 
@@ -17,10 +27,14 @@ This Hapi Plugin creates a Connection (Pool) to PostgreSQL when your
 server boots and makes it available *anywhere* in your app's
 route handlers via `request.pg.client`.
 
+When you shut down your server (*e.g. the `server.stop` in your tests*)
+the connection pool is closed for you.
+
 ### One Dependency: `node-postgres`
 
-Uses https://github.com/brianc/node-postgres
+This plugin uses https://github.com/brianc/node-postgres
 the *most popular* (*actively maintained*) node PostgreSQL Client.
+We use
 
 ## *How*?
 
