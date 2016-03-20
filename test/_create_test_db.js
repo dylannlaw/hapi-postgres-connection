@@ -12,7 +12,7 @@ function create_tables (callback) {
     assert(!err); // if db connection fails then EXPLODE!!
     var file = require('path').resolve(__dirname + '/test_db_setup.sql');
     var query = require('fs').readFileSync(file, 'utf8').toString();
-    console.log('\n', query);
+    // console.log('\n', query);
     client.query(query, function(err, result) {
       if(err) {
         return console.error('error running query', err);
