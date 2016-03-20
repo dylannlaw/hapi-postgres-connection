@@ -10,8 +10,7 @@ var run_once = false;
 
 // connect once and expose the connection via PG_CON
 pg.connect(process.env.DATABASE_URL, function(err, client, done) {
-  assert(!err, pkg.name + 'ERROR Connecting to PostgreSQL!')
-  console.log('>> CONNECTED!')
+  assert(!err, pkg.name + 'ERROR Connecting to PostgreSQL!');
   PG_CON.push({ client: client, done: done});
   return;
 });
@@ -28,8 +27,6 @@ exports.register = function(server, options, next) {
     if(!run_once) {
       run_once = true;
       server.on('stop', function () { // only one server.on('stop') listener
-        console.log('STOP ... PG_CON.length:', PG_CON.length);
-
         PG_CON.forEach(function (con) { // close all the connections
           con && con.client && con.client.readyForQuery && con.client.end();
           con && con.done && con.done();
@@ -37,7 +34,6 @@ exports.register = function(server, options, next) {
         server.log(['info', pkg.name], 'DB Connection Closed');
       });
     }
-    // console.log('PG_CON.length:', PG_CON.length);
     if(PG_CON.length === 0) {
       pg.connect(process.env.DATABASE_URL, function(err, client, done) {
         PG_CON.push({ client: client, done: done});
@@ -48,7 +44,6 @@ exports.register = function(server, options, next) {
       assign_connection(request, reply);
     }
   });
-
   next();
 };
 
