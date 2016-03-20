@@ -7,7 +7,7 @@
     "start":"PORT=8000 node test/server_example.js",
     "create":"node test/_create_test_db.js",
     "fast": "./node_modules/tape/bin/tape ./test/*.js",
-    "test": "./node_modules/.bin/istanbul cover ./node_modules/tape/bin/tape ./test/connection_error.test.js  | node_modules/tap-spec/bin/cmd.js"
+    "test": "npm run create && ./node_modules/.bin/istanbul cover ./node_modules/tape/bin/tape ./test/connection_error.test.js  | node_modules/tap-spec/bin/cmd.js"
   },
   "dependencies": {
     "pg": "^4.5.1"
