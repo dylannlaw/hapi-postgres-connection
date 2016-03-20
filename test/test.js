@@ -1,4 +1,3 @@
-require('./_create_test_db.js');
 var test = require('tape'); // testing done simple ;-)
 var Hapi = require('hapi');
 var server = require('./server_example.js');

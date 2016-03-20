@@ -25,7 +25,6 @@ function create_tables (callback) {
 
 test('Create "users" table in test database', function (t) {
   create_tables(function (err, data) {
-    // console.log(data);
     t.equal(data.command, 'INSERT', 'DB Table Created & Test Data Inserted');
     t.end();
   })
