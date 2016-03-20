@@ -1,5 +1,6 @@
 var test = require('tape');
 var Hapi = require('hapi');
+require('decache')('../index.js'); // we have to "un-require" the plugin
 
 /************************* TESTS ***************************/
 test("server.register plugin fails when DATABASE_URL undefined", function (t) {
