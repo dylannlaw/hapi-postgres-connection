@@ -1,36 +1,40 @@
-var pg = require('pg');
 var assert = require('assert');
-var internals = {};
+// if DATABASE_URL Environment Variable is unset halt the server.start
+assert(process.env.DATABASE_URL, 'Please set DATABASE_URL Env Variable');
+
+var pg = require('pg');
 var pkg = require('./package.json');
+var internals = {};
+var PG_CON = []; // this "global" is local to the plugin.
+var run_once = false;
+
+// connect once and expose the connection via PG_CON
+pg.connect(process.env.DATABASE_URL, function(err, client, done) {
+  assert(!err, pkg.name + 'ERROR Connecting to PostgreSQL!')
+  PG_CON.push({ client: client, done: done});
+  return;
+});
 
 exports.register = function(server, options, next) {
-  // if DATABASE_URL Environment Variable is unset halt the server.start
-  assert(process.env.DATABASE_URL, 'Please set DATABASE_URL Env Variable');
-  // yes, this creates multiple connections, but aparently, that's OK...
-  var CON = [], run_once = false;
 
   server.ext('onPreAuth', function (request, reply) {
-    pg.connect(process.env.DATABASE_URL, function(err, client, done) {
-      assert(!err, pkg.name + 'ERROR Connecting')
-      server.log(['info', pkg.name], 'DB Connection Active');
-      CON.push({ client: client, done: done});
-      request.pg = {
-        client: client,
-        done: done
-      }
-      // each connection created is shut down when the server stops (e.g tests)
-      if(!run_once) {
-        run_once = true;
-        server.on('stop', function () { // only one server.on('stop') listener
-          CON.forEach(function (con) { // close all the connections
-            con.client.end();
-            con.done();
-          })
-          server.log(['info', pkg.name], 'DB Connection Closed');
-        });
-      }
-      reply.continue();
-    });
+    // each connection created is shut down when the server stops (e.g tests)
+    if(!run_once) {
+      run_once = true;
+      server.on('stop', function () { // only one server.on('stop') listener
+        PG_CON.forEach(function (con) { // close all the connections
+          con && con.client && con.client.readyForQuery && con.client.end();
+          con && con.done && con.done();
+        })
+        server.log(['info', pkg.name], 'DB Connection Closed');
+      });
+    }
+
+    request.pg = {
+      client: PG_CON[0].client,
+      done: PG_CON[0].done
+    }
+    reply.continue();
   });
 
   next();

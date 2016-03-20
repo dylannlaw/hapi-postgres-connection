@@ -4,7 +4,7 @@ var assert = require('assert');
 
 var server = new Hapi.Server({ debug: { request: ['error'] } });
 
-server.connection();
+server.connection({ port: process.env.PORT });
 
 server.register({
   register: require('../index.js')
@@ -16,15 +16,21 @@ server.register({
 });
 
 server.route({
-  method: 'GET',
+  method: '*',
   path: '/',
   handler: function(request, reply) {
-    var email = 'test@test.net';
-    var select = escape('SELECT * FROM people WHERE (email = %L)', email);
-    request.pg.client.query(select, function(err, result) {
-      request.pg.done();
-      // console.log(err, result);
-      return reply(result.rows[0]);
+
+    var message = 'Hello World!';
+    var insert = escape('INSERT INTO logs (message) VALUES (%L)', message);
+    var q = 'SELECT * FROM logs ORDER BY log_timestamp DESC LIMIT 1;'
+    // var select = 'SELECT * FROM logs WHERE (log_id = 2)';
+    request.pg.client.query(insert, function(err, result) {
+      // console.log(err, result)
+      request.pg.client.query(q, function(err, result) {
+        // console.log(err, result.rows)
+        reply(result.rows[0]);
+        return;
+      })
     })
   }
 });
@@ -37,11 +43,21 @@ server.route({
       request.payload.message);
     var select = 'SELECT * FROM logs WHERE (log_id = 2)';
     request.pg.client.query(insert, function(err, result) {
+      // console.log(err, result)
       request.pg.client.query(select, function(err, result) {
-        request.pg.done();
-        return reply(result.rows[0]);
+        // console.log(err, result.rows)
+        reply(result.rows[0]);
+        return;
       })
     })
+  }
+});
+
+server.route({
+  method: 'GET',
+  path: '/nopg',
+  handler: function(request, reply) {
+    return reply('nopg'); // does not make any PG queries
   }
 });
 

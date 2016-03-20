@@ -74,8 +74,6 @@ server.route({
     var select = escape('SELECT * FROM people WHERE (email = %L)', email);
     request.pg.client.query(select, function(err, result) {
       console.log(err, result);
-      request.pg.done(); // return the connection to the "pool"
-      // do what ever you want with the result
       return reply(result.rows[0]);
     })
   }
@@ -96,6 +94,9 @@ or why this is a *good idea*
 (*hard-coding values in your app is a really bad idea...*)  
 please see: https://github.com/dwyl/learn-environment-variables
 
+## *Q*: Don't We need to Close the Postgres Connection?
+
+***A***: No! The plugin handles closing the connection pool for you!
 
 
 ## *Implementation Detail*
