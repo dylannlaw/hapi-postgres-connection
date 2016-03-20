@@ -1,47 +1,65 @@
 require('./_create_test_db.js');
-
 var test = require('tape'); // testing done simple ;-)
 var Hapi = require('hapi');
-var VALID_DATABASE_URL =  process.env.DATABASE_URL;
-/************************* TESTS ***************************/
+var server = require('./server_example.js');
 
-test("server.register plugin fails when DATABASE_URL undefined", function (t) {
-  // temporarily set process.env.DATABASE_URL to an Invalid url:
-  delete process.env.DATABASE_URL;
-  var server1 = new Hapi.Server();
-  server1.connection();
-  try {  // attempt to boot the server with an invalid DATABASE_URL
-    server1.register({ register: require('../index.js') }, function(err) {
-      console.log(err); // this error is never reached as the assert is fatal!
+// test.only("Connect to Valid DATABASE_URL", function (t) {
+//   // hit the endpoint a few times
+//   var count = 0;
+//   var request_total = 100;
+//   for(var i = 0; i < request_total; i++) {
+//     server.inject('/', function(response) {
+//       t.equal(response.result.id, 1, "Person found in Postgres DB "+ ++count)
+//       if (count === request_total) {
+//         server.stop(function(){});
+//         t.end();
+//       }
+//     });
+//   }
+// });
+
+test('GET /nopg url that do not make any postgres queires', function (t) {
+
+  var nopg = { method: 'GET', url: '/nopg' };
+  var request_count = 0;
+  var request_total = 10;
+  for(var i = 0; i < request_total; i++) {
+    server.inject(nopg, function(response) {
+      t.equal(response.statusCode, 200, '/nopg visited '+ request_count);
+      if(request_count++ === request_total - 1) {
+        console.log('last one!');
+        // server.stop(function(){});
+        t.end();
+      }
     });
-  } catch (e) {
-    t.ok(e.toString().indexOf('Please set DATABASE_URL') > 1,
-      'Please set DATABASE_URL Env Variable');
-    t.end();
   }
 });
 
-test("Connect to Valid DATABASE_URL", function (t) {
-  process.env.DATABASE_URL = VALID_DATABASE_URL; // restore valid DATABASE_URL
-  var server = require('./server_example.js');
-  // hit the endpoint a few times
-  var count = 0;
-  for(var i = 1; i < 11; i++) {
-    server.inject('/', function(response) {
-      t.equal(response.result.id, 1, "Person found in Postgres DB "+ ++count)
-    });
-  }
-
-  var options = {
+test('POST /insert 10k times to simulate many concurent hits to same endpoint', function(t){
+  var insert = {
     method: 'POST',
     url: '/insert',
     payload: { message: 'Ground control to major Tom.'}
   }
+  var request_count = 0;
+  var request_total = 1001;
+  var start_time = Date.now();
+  for(var i = 0; i < request_total; i++) {
+    server.inject(insert, function(response) {
+      // t.equal(response.statusCode, 200, "Find Person in Database");
+      t.ok(response.result.log_id > 1, "Read log entry " + request_count)
+      if(request_count++ === request_total - 1) {
+        // server.stop(function(){});
+        var end_time = Date.now();
+        var time_taken = end_time - start_time; // in miliseconds
+        var per_sec = request_total/(time_taken/1000);
+        console.log('Time Taken:', time_taken, 'ms | Requests per second:', per_sec);
+        t.end();
+      }
+    });
+  }
+})
 
-  server.inject(options, function(response) {
-    // t.equal(response.statusCode, 200, "Find Person in Database");
-    t.equal(response.result.log_id, 2, "Log found in Postgres DB")
-    server.stop(function(){  t.end() });
-  });
-
-});
+test.onFinish(function () {
+  server.stop(function(){});
+})

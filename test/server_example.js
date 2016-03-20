@@ -22,8 +22,6 @@ server.route({
     var email = 'test@test.net';
     var select = escape('SELECT * FROM people WHERE (email = %L)', email);
     request.pg.client.query(select, function(err, result) {
-      request.pg.done();
-      // console.log(err, result);
       return reply(result.rows[0]);
     })
   }
@@ -37,11 +35,21 @@ server.route({
       request.payload.message);
     var select = 'SELECT * FROM logs WHERE (log_id = 2)';
     request.pg.client.query(insert, function(err, result) {
+      // console.log(err, result)
       request.pg.client.query(select, function(err, result) {
-        request.pg.done();
-        return reply(result.rows[0]);
+        // console.log(err, result.rows)
+        reply(result.rows[0]);
+        return;
       })
     })
+  }
+});
+
+server.route({
+  method: 'GET',
+  path: '/nopg',
+  handler: function(request, reply) {
+    return reply('nopg'); // does not make any PG queries
   }
 });
 
