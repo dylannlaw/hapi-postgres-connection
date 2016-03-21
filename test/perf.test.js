@@ -1,32 +1,17 @@
-require('./_create_test_db.js');
 var test = require('tape'); // testing done simple ;-)
 var Hapi = require('hapi');
+require('decache')('../index.js'); // ensure the plugin is not cached.
 var server = require('./server_example.js');
-
-// test.only("Connect to Valid DATABASE_URL", function (t) {
-//   // hit the endpoint a few times
-//   var count = 0;
-//   var request_total = 100;
-//   for(var i = 0; i < request_total; i++) {
-//     server.inject('/', function(response) {
-//       t.equal(response.result.id, 1, "Person found in Postgres DB "+ ++count)
-//       if (count === request_total) {
-//         server.stop(function(){});
-//         t.end();
-//       }
-//     });
-//   }
-// });
 
 test('GET /nopg url that do not make any postgres queires', function (t) {
 
   var nopg = { method: 'GET', url: '/nopg' };
   var request_count = 0;
-  var request_total = 10;
+  var request_total = 5;
   for(var i = 0; i < request_total; i++) {
     server.inject(nopg, function(response) {
       t.equal(response.statusCode, 200, '/nopg visited '+ request_count);
-      if(request_count++ === request_total - 1) {
+      if(++request_count === request_total - 1) {
         console.log('last one!');
         // server.stop(function(){});
         t.end();
@@ -35,7 +20,7 @@ test('GET /nopg url that do not make any postgres queires', function (t) {
   }
 });
 
-test('POST /insert 10k times to simulate many concurent hits to same endpoint', function(t){
+test('POST /insert 1k times to simulate many concurent hits to same endpoint', function(t){
   var insert = {
     method: 'POST',
     url: '/insert',
