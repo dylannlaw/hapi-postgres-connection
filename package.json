@@ -1,6 +1,6 @@
 {
   "name": "hapi-postgres-connection",
-  "version": "2.1.1",
+  "version": "6.0.1",
   "description": "A connection (pool) to PostgreSQL available anywhere in your hapi application",
   "main": "index.js",
   "scripts": {
@@ -11,15 +11,15 @@
     "test": "npm run create && ./node_modules/.bin/istanbul cover ./node_modules/tape/bin/tape ./test/connection_error.test.js  | node_modules/tap-spec/bin/cmd.js && npm run perf"
   },
   "dependencies": {
-    "pg": "^4.5.1"
+    "pg": "^6.0.1"
   },
   "devDependencies": {
-    "decache": "^3.0.5",
-    "hapi": "^13.2.1",
-    "istanbul": "^0.4.2",
+    "decache": "^3.1.0",
+    "hapi": "^13.4.1",
+    "istanbul": "^0.4.4",
     "pg-escape": "^0.2.0",
     "tap-spec": "^4.1.1",
-    "tape": "^4.5.1"
+    "tape": "^4.6.0"
   },
   "repository": {
     "type": "git",
