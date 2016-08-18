@@ -16,7 +16,7 @@ pg.connect(process.env.DATABASE_URL, function(err, client, done) {
 });
 
 function assign_connection (request, reply) { // DRY
-  request.pg = { client: PG_CON[0].client, done: PG_CON[0].done };
+  request.pg = exports.getCon();
   reply.continue();
 }
 
@@ -49,4 +49,8 @@ exports.register = function(server, options, next) {
 
 exports.register.attributes = {
   pkg: pkg
+};
+
+exports.getCon = function () {
+  return { client: PG_CON[0].client, done: PG_CON[0].done };
 };
