@@ -1,6 +1,6 @@
 {
   "name": "hapi-postgres-connection",
-  "version": "6.0.1",
+  "version": "6.1.0",
   "description": "A connection (pool) to PostgreSQL available anywhere in your hapi application",
   "main": "index.js",
   "scripts": {
@@ -14,8 +14,8 @@
     "pg": "^6.0.1"
   },
   "devDependencies": {
-    "decache": "^3.1.0",
-    "hapi": "^13.4.1",
+    "decache": "^4.0.0",
+    "hapi": "^14.2.0",
     "istanbul": "^0.4.4",
     "pg-escape": "^0.2.0",
     "tap-spec": "^4.1.1",
