@@ -4,7 +4,6 @@ assert(process.env.DATABASE_URL, 'Please set DATABASE_URL Env Variable');
 
 var pg = require('pg');
 var pkg = require('./package.json');
-var internals = {};
 var PG_CON = []; // this "global" is local to the plugin.
 var run_once = false;
 
@@ -16,7 +15,7 @@ pg.connect(process.env.DATABASE_URL, function(err, client, done) {
 });
 
 function assign_connection (request, reply) { // DRY
-  request.pg = { client: PG_CON[0].client, done: PG_CON[0].done };
+  request.pg = exports.getCon();
   reply.continue();
 }
 
@@ -30,7 +29,7 @@ exports.register = function(server, options, next) {
         PG_CON.forEach(function (con) { // close all the connections
           con && con.client && con.client.readyForQuery && con.client.end();
           con && con.done && con.done();
-        })
+        });
         server.log(['info', pkg.name], 'DB Connection Closed');
       });
     }
@@ -49,4 +48,8 @@ exports.register = function(server, options, next) {
 
 exports.register.attributes = {
   pkg: pkg
+};
+
+exports.getCon = function () {
+  return { client: PG_CON[0].client, done: PG_CON[0].done };
 };

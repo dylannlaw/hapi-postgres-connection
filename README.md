@@ -63,6 +63,13 @@ server.register({ // register all your plugins
 Now *all* your route handlers have access to Postgres
 via: `request.pg.client`
 
+You also can also access Postgres through the `getCon` method on the 
+Hapi Postgres Connection module:
+ `var pg = require('hapi-postgres-connection').getCon()`
+ 
+This method may be useful when do not have access to the request
+object.
+
 ### 3. Using Postgres Client in your Route Handler
 
 ```js
