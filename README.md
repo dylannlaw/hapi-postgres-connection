@@ -2,7 +2,7 @@
 
 ![hapi-postgres-connection](https://cloud.githubusercontent.com/assets/194400/13723469/73b5d8f2-e85e-11e5-82dc-943e7ebccdce.png)
 
-Creates a PostgreSQL Connection (Pool) available anywhere in your Hapi application.
+Creates a PostgreSQL Connection available anywhere in your Hapi application.
 
 [![Build Status](https://travis-ci.org/dwyl/hapi-postgres-connection.svg?branch=master)](https://travis-ci.org/dwyl/hapi-postgres-connection)
 [![codecov.io](https://codecov.io/github/dwyl/hapi-postgres-connection/coverage.svg?branch=master)](https://codecov.io/github/dwyl/hapi-postgres-connection?branch=master)
@@ -26,12 +26,12 @@ that makes Postgres available in all your route handlers.
 
 ## *What*?
 
-This Hapi Plugin creates a Connection (Pool) to PostgreSQL when your
+This Hapi Plugin creates a Connection to PostgreSQL when your
 server starts up and makes it available *anywhere* in your app's
 route handlers via `request.pg.client`.
 
 When you shut down your server (*e.g. the `server.stop` in your tests*)
-the connection pool is closed for you.
+the connection is closed for you.
 
 ### *One Dependency*: `node-postgres` *always up-to-date*
 
@@ -77,8 +77,8 @@ server.route({
   method: 'GET',
   path: '/',
   handler: function(request, reply) {
-    var email = 'test@test.net';
-    var select = escape('SELECT * FROM people WHERE (email = %L)', email);
+    let email = 'test@test.net';
+    let select = `SELECT * FROM people WHERE ${email}`;
     request.pg.client.query(select, function(err, result) {
       console.log(err, result);
       return reply(result.rows[0]);
@@ -103,7 +103,7 @@ please see: https://github.com/dwyl/learn-environment-variables
 
 ## *Q*: Don't We need to Close the Postgres Connection?
 
-***A***: No! The plugin handles closing the connection pool for you!
+***A***: No! The plugin handles closing the connection for you!
 
 
 ## *Implementation Detail*
