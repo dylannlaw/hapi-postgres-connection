@@ -8,7 +8,7 @@ var assert = require('assert');
 
 function create_tables (callback) {
   var pool = new pg.Pool(process.env.DATABASE_URL);
-  pool.connect( function(err, client, done) {
+  pool.connect( function(err, client) {
     assert(!err); // if db connection fails then EXPLODE!!
     var file = require('path').resolve(__dirname + '/test_db_setup.sql');
     var query = require('fs').readFileSync(file, 'utf8').toString();
