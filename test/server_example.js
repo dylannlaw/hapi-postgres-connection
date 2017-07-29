@@ -25,9 +25,9 @@ server.route({
     var q = 'SELECT * FROM logs ORDER BY log_timestamp DESC LIMIT 1;'
     // var select = 'SELECT * FROM logs WHERE (log_id = 2)';
     request.pg.client.query(insert, function(err, result) {
-      // console.log(err, result)
+      console.log('1', err, result.rows)
       request.pg.client.query(q, function(err, result) {
-        // console.log(err, result.rows)
+        console.log('2', err, result.rows)
         reply(result.rows[0]);
         return;
       })
