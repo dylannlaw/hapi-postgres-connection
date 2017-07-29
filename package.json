@@ -11,7 +11,7 @@
     "test": "npm run create && ./node_modules/.bin/istanbul cover ./node_modules/tape/bin/tape ./test/connection_error.test.js  | node_modules/tap-spec/bin/cmd.js && npm run perf"
   },
   "dependencies": {
-    "pg": "^6.0.1"
+    "pg": "^7.0.2"
   },
   "devDependencies": {
     "decache": "^4.0.0",
