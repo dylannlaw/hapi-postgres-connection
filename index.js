@@ -7,8 +7,11 @@ var pkg = require('./package.json');
 var PG_CON = []; // this "global" is local to the plugin.
 var run_once = false;
 
-// connect once and expose the connection via PG_CON
-pg.connect(process.env.DATABASE_URL, function(err, client, done) {
+// create a pool
+var pool = new pg.Pool(process.env.DATABASE_URL);
+
+// connection using created pool
+pool.connect(function(err, client, done) {
   assert(!err, pkg.name + 'ERROR Connecting to PostgreSQL!');
   PG_CON.push({ client: client, done: done});
   return;
