@@ -25,7 +25,7 @@ function create_tables (callback) {
 
 test('Create "users" table in test database', function (t) {
   create_tables(function (err, data) {
-    t.equal(data.command, 'INSERT', 'DB Table Created & Test Data Inserted');
+    t.equal(data[data.length-1].command, 'INSERT', 'DB Table Created & Test Data Inserted');
     t.end();
   })
 });

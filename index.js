@@ -37,7 +37,8 @@ exports.register = function(server, options, next) {
       });
     }
     if(PG_CON.length === 0) {
-      pg.connect(process.env.DATABASE_URL, function(err, client, done) {
+      pool.connect(function(err, client, done) {
+        assert(!err, pkg.name + 'ERROR Connecting to PostgreSQL!');
         PG_CON.push({ client: client, done: done});
         assign_connection(request, reply);
       });
