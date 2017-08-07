@@ -8,7 +8,7 @@ var PG_CON = []; // this "global" is local to the plugin.
 var run_once = false;
 
 // create a pool
-var pool = new pg.Pool(process.env.DATABASE_URL);
+var pool = new pg.Pool({connectionString: process.env.DATABASE_URL});
 
 // connection using created pool
 pool.connect(function(err, client, done) {
