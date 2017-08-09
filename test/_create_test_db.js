@@ -7,7 +7,7 @@ var pg = require('pg');
 var assert = require('assert');
 
 function create_tables (callback) {
-  var pool = new pg.Pool(process.env.DATABASE_URL);
+  var pool = new pg.Pool({connectionString: process.env.DATABASE_URL});
   pool.connect( function(err, client) {
     assert(!err); // if db connection fails then EXPLODE!!
     var file = require('path').resolve(__dirname + '/test_db_setup.sql');
@@ -25,7 +25,7 @@ function create_tables (callback) {
 
 test('Create "users" table in test database', function (t) {
   create_tables(function (err, data) {
-    t.equal(data.command, 'INSERT', 'DB Table Created & Test Data Inserted');
+    t.equal(data[data.length-1].command, 'INSERT', 'DB Table Created & Test Data Inserted');
     t.end();
   })
 });
