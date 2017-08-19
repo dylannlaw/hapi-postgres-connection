@@ -14,12 +14,12 @@
     "pg": "^7.1.2"
   },
   "devDependencies": {
-    "decache": "^4.0.0",
-    "hapi": "^14.2.0",
-    "istanbul": "^0.4.4",
+    "decache": "^4.1.0",
+    "hapi": "^16.5.2",
+    "istanbul": "^0.4.5",
     "pg-escape": "^0.2.0",
     "tap-spec": "^4.1.1",
-    "tape": "^4.6.0"
+    "tape": "^4.8.0"
   },
   "repository": {
     "type": "git",
