@@ -1,11 +1,11 @@
 {
   "name": "hapi-postgres-connection",
-  "version": "6.3.0",
+  "version": "6.4.0",
   "description": "A connection (pool) to PostgreSQL available anywhere in your hapi application",
   "main": "index.js",
   "scripts": {
-    "start":"PORT=8000 node test/server_example.js",
-    "create":"node test/_create_test_db.js",
+    "start": "PORT=8000 node test/server_example.js",
+    "create": "node test/_create_test_db.js",
     "fast": "./node_modules/tape/bin/tape ./test/*.js",
     "perf": "node test/perf.test.js",
     "test": "npm run create && ./node_modules/.bin/istanbul cover ./node_modules/tape/bin/tape ./test/connection_error.test.js  | node_modules/tap-spec/bin/cmd.js && npm run perf"
