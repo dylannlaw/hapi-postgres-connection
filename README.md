@@ -101,6 +101,12 @@ or why this is a *good idea*
 (*hard-coding values in your app is a really bad idea...*)  
 please see: https://github.com/dwyl/learn-environment-variables
 
+### *Optional* Environment Variable: `DATABASE_SSL`
+If your database connection requires the use of SSL, you can set `DATABASE_SSL` environment
+variable to true and the pool connection will be done accordingly. This is required
+(for example) by databases hosted on [*Heroku*]
+(https://devcenter.heroku.com/articles/heroku-postgresql#heroku-postgres-ssl).
+
 ## *Q*: Don't We need to Close the Postgres Connection?
 
 ***A***: No! The plugin handles closing the connection for you!
