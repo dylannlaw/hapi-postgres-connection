@@ -17,6 +17,10 @@ pool.connect(function(err, client, done) {
   return;
 });
 
+pool.on('error', (err) => {
+  console.error('There is an error connecting to PostgreSQL', err.stack)
+})
+
 function assign_connection (request, reply) { // DRY
   request.pg = exports.getCon();
   reply.continue();
